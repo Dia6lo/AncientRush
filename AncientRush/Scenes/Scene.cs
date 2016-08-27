@@ -9,8 +9,18 @@ namespace AncientRush.Scenes
             Container = new Container();
         }
 
-        public Container Container { get; }
+        public Container Container { get; private set; }
 
-        public abstract void Update();
+        public virtual void Update() { }
+
+        protected void Open(Scene scene)
+        {
+            App.SceneManager.Open(scene);
+        }
+
+        protected void Open<T>() where T: Scene, new()
+        {
+            App.SceneManager.Open<T>();
+        }
     }
 }

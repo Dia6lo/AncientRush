@@ -7,22 +7,29 @@ namespace AncientRush
     public class App
     {
         private static IRenderer renderer;
-        private static Scene scene;
+
+        public static SceneManager SceneManager { get; private set; }
+
+        private static Scene CurrentScene
+        {
+            get { return SceneManager.CurrentScene; }
+        }
 
         [Ready]
         public static void Main()
         {
             renderer = Pixi.AutoDetectRenderer(800, 600, new RendererOptions {BackgroundColor = 0x1099bb});
             Document.Body.AppendChild(renderer.View);
-            scene = new MainMenu();
+            SceneManager = new SceneManager();
+            SceneManager.Open<MainMenu>();
             Animate();
         }
 
         private static void Animate()
         {
             Window.RequestAnimationFrame(Animate);
-            scene.Update();
-            renderer.Render(scene.Container);
+            CurrentScene.Update();
+            renderer.Render(CurrentScene.Container);
         }
     }
 }

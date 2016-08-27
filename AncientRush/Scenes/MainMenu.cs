@@ -5,12 +5,10 @@ namespace AncientRush.Scenes
 {
     public class MainMenu : Scene
     {
-        private static Sprite sprite;
-
         public MainMenu()
         {
-            sprite = Sprite.FromImage("assets/Shia.png");
-            sprite.Position.Set(200, 200);
+            var sprite = Sprite.FromImage("assets/Start.png");
+            sprite.Position.Set(400, 300);
             sprite.Anchor.Set(0.5f, 0.5f);
             sprite.Interactive = true;
             sprite.OnMouseDown(OnDown);
@@ -18,15 +16,13 @@ namespace AncientRush.Scenes
             Container.AddChild(sprite);
         }
 
-        private static void OnDown(InteractionEvent arg)
+        private void OnDown(InteractionEvent arg)
         {
-            sprite.Scale.X = 0.3f;
-            sprite.Scale.Y = 0.3f;
+           Open<TestScene>();
         }
 
         public override void Update()
         {
-            sprite.Rotation += 0.2f;
         }
     }
 }
