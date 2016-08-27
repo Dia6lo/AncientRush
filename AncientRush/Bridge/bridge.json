@@ -1,5 +1,6 @@
 {
-  "output": "../AncientRush.Website/wwwroot/scripts"
+  "output": "../AncientRush.Website/wwwroot/scripts",
+  "outputBy": "Project"
 
   // Uncomment to add TypeScript Definition file (.d.ts) generation to your project.
   // , "generateTypeScript": true
