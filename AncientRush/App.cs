@@ -7,6 +7,7 @@ namespace AncientRush
     public class App
     {
         private static IRenderer renderer;
+        private static double currentTime;
 
         public static SceneManager SceneManager { get; private set; }
 
@@ -22,14 +23,15 @@ namespace AncientRush
             Document.Body.AppendChild(renderer.View);
             SceneManager = new SceneManager();
             SceneManager.Open<MainMenu>();
-            Animate();
+            Window.RequestAnimationFrame(Animate);
         }
 
-        private static void Animate()
+        private static void Animate(double time)
         {
             Window.RequestAnimationFrame(Animate);
-            CurrentScene.Update();
+            CurrentScene.Update(time - currentTime);
             renderer.Render(CurrentScene.Container);
+            currentTime = time;
         }
     }
 }

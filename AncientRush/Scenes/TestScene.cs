@@ -1,3 +1,4 @@
+using Bridge.Html5;
 using Bridge.Pixi;
 using Bridge.Pixi.Interaction;
 
@@ -24,7 +25,7 @@ namespace AncientRush.Scenes
             sprite.Scale.Y = 0.3f;
         }
 
-        public override void Update()
+        public override void Update(double delta)
         {
             sprite.Rotation += 0.2f;
         }

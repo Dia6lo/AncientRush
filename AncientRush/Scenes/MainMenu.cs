@@ -18,11 +18,7 @@ namespace AncientRush.Scenes
 
         private void OnDown(InteractionEvent arg)
         {
-           Open<TestScene>();
-        }
-
-        public override void Update()
-        {
+           Open<FirestarterScene>();
         }
     }
 }

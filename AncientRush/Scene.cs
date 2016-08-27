@@ -1,6 +1,6 @@
 ﻿using Bridge.Pixi;
 
-namespace AncientRush.Scenes
+namespace AncientRush
 {
     public abstract class Scene
     {
@@ -11,7 +11,7 @@ namespace AncientRush.Scenes
 
         public Container Container { get; private set; }
 
-        public virtual void Update() { }
+        public virtual void Update(double delta) { }
 
         protected void Open(Scene scene)
         {
