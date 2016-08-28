@@ -1,20 +1,22 @@
-﻿using Bridge.Pixi;
-using Bridge.Pixi.Extras;
+﻿using System;
+using System.Collections.Generic;
+using Bridge.Pixi;
 using Bridge.Pixi.Interaction;
 
 namespace AncientRush.Scenes
 {
     public class MainMenu : Scene
     {
-        private Container cloudContainer = new Container();
         private readonly CaveMan caveMan;
         private readonly Campfire campfire;
         private float timer;
         private bool startPressed;
+        private Clouds clouds;
 
         public MainMenu()
         {
-            Container.AddChild(cloudContainer);
+            clouds = new Clouds();
+            Container.AddChild(clouds.Container);
             var bg = new Sprite(App.Textures.MainMenuBG);
             Container.AddChild(bg);
             caveMan = new CaveMan {Container = {Position = new Point(25, 250)}};
@@ -39,6 +41,7 @@ namespace AncientRush.Scenes
 
         public override void Update(double delta)
         {
+            clouds.Update();
             if (!startPressed) return;
             timer += (float)delta;
             if (timer < 1000) return;
@@ -52,77 +55,58 @@ namespace AncientRush.Scenes
         }
     }
 
-    public class CaveMan
+    public class Clouds
     {
-        private MovieClip idle;
-        private Sprite emotions;
+        private Dictionary<Sprite, float> clouds = new Dictionary<Sprite, float>();
+        private Random random = new Random();
 
-        public CaveMan()
+        public Clouds()
         {
             Container = new Container();
-            idle = new MovieClip(new[] {App.Textures.CaveManMenu0, App.Textures.CaveManMenu1})
-            {
-                Loop = true,
-                AnimationSpeed = 0.05f
-            };
-            Container.AddChild(idle);
-            emotions = new Sprite(App.Textures.CaveManMenu2)
-            {
-                Visible = false
-            };
-            Container.AddChild(emotions);
-            idle.Play();
+            AddCloud(new Sprite(App.Textures.Cloud) {
+                Position = new Point(-App.Textures.Cloud.Width, 0),
+                Scale = new Point(1, 1)},
+                2);
+            AddCloud(new Sprite(App.Textures.Cloud) {
+                Position = new Point(App.Width, 100),
+                Scale = new Point(0.75f, 0.75f)},
+                -5);
         }
 
         public Container Container { get; private set; }
 
-        public void NoticeChanges()
+        public void Update()
         {
-            idle.Stop();
-            idle.Visible = false;
-            emotions.Visible = true;
-        }
-
-        public void BecomeSad()
-        {
-            emotions.Texture = App.Textures.CaveManMenu3;
-        }
-    }
-
-    public class Campfire
-    {
-        private MovieClip idle;
-        private Sprite extinguish;
-
-        public Campfire()
-        {
-            Container = new Container();
-            idle = new MovieClip(new[] { App.Textures.Campfire0, App.Textures.Campfire1 })
+            var maxWidth = App.Textures.Cloud.Width;
+            foreach (var cloud in clouds)
             {
-                Loop = true,
-                AnimationSpeed = 0.1f
-            };
-            Container.AddChild(idle);
-            extinguish = new Sprite(App.Textures.Campfire2)
+                cloud.Key.X += cloud.Value;
+                var finishedMoving = cloud.Value > 0 && cloud.Key.X > App.Width ||
+                                     cloud.Value < 0 && cloud.Key.X < -maxWidth;
+                if (!finishedMoving) continue;
+                Container.RemoveChild(cloud.Key);
+                clouds.Remove(cloud.Key);
+            }
+            var spawnNewCloud = random.Next(100) < 1;
+            if (!spawnNewCloud) return;
+            var scale = (float) random.Next(5, 10) / 10;
+            var direction = random.Next(0, 2) == 0 ? Direction.Left : Direction.Right;
+            var speed = (float) random.NextDouble() * 5;
+            if (direction == Direction.Left)
+                speed *= -1;
+            var height = random.Next(-50, 150);
+            var newCloud = new Sprite(App.Textures.Cloud)
             {
-                Visible = false
+                Scale = new Point(scale, scale),
+                Position = direction == Direction.Right ? new Point(-maxWidth, height) : new Point(App.Width, height)
             };
-            Container.AddChild(extinguish);
-            idle.Play();
+            AddCloud(newCloud, speed);
         }
 
-        public Container Container { get; private set; }
-
-        public void BeginExtinguish()
+        private void AddCloud(Sprite cloud, float speed)
         {
-            idle.Stop();
-            idle.Visible = false;
-            extinguish.Visible = true;
-        }
-
-        public void FinishExtinguish()
-        {
-            extinguish.Texture = App.Textures.Campfire3;
+            clouds.Add(cloud, speed);
+            Container.AddChild(cloud);
         }
     }
 }
