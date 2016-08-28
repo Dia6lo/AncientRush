@@ -1,4 +1,5 @@
-﻿using AncientRush.Scenes;
+﻿using System;
+using AncientRush.Scenes;
 using Bridge.Html5;
 using Bridge.Pixi;
 
@@ -10,6 +11,7 @@ namespace AncientRush
         private static double currentTime;
 
         public static SceneManager SceneManager { get; private set; }
+        public static TexturePool Textures { get; private set; }
 
         private static Scene CurrentScene
         {
@@ -20,9 +22,10 @@ namespace AncientRush
         public static void Main()
         {
             renderer = Pixi.AutoDetectRenderer(800, 600, new RendererOptions {BackgroundColor = 0x1099bb});
-            Document.Body.AppendChild(renderer.View);
+            Document.Body.AppendChild(renderer["view"].As<HTMLCanvasElement>());
+            Textures = new TexturePool();
             SceneManager = new SceneManager();
-            SceneManager.Open<MainMenu>();
+            SceneManager.Open<MaterialCollectionScene>();
             Window.RequestAnimationFrame(Animate);
         }
 

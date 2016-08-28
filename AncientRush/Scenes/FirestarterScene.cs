@@ -7,13 +7,13 @@ namespace AncientRush.Scenes
 {
     public class FirestarterScene : Scene
     {
-        private Texture leftTexture = Texture.FromImage("assets/Firestarter_1.png");
-        private Texture rightTexture = Texture.FromImage("assets/Firestarter_2.png");
-        private Sprite hand;
-        private Sprite arrow;
+        private readonly Texture leftTexture = App.Textures.Firestarter1;
+        private readonly Texture rightTexture = App.Textures.Firestarter2;
+        private readonly Sprite hand;
+        private readonly Sprite arrow;
+        private readonly ProgressBar progressBar;
+        private const float ProgressBarReductionSpeed = -6000;
         private Side currentSide;
-        private ProgressBar progressBar;
-        private float k = -2000;
 
         public FirestarterScene()
         {
@@ -29,7 +29,7 @@ namespace AncientRush.Scenes
                 }
             };
             Container.AddChild(progressBar.Sprite);
-            arrow = new Sprite(Texture.FromImage("assets/Arrow.png"))
+            arrow = new Sprite(App.Textures.Arrow)
             {
                 Anchor = new Point(1, 0.5f),
                 Position = new Point(200, 150)
@@ -45,15 +45,15 @@ namespace AncientRush.Scenes
             Document.AddEventListener(EventType.KeyDown, KeyPressed);
         }
 
-        private void KeyPressed(Event @event)
+        private void KeyPressed(Event e)
         {
-            var e = @event.As<KeyboardEvent>();
-            switch (e.Key)
+            var key = e.As<KeyboardEvent>().GetKey();
+            switch (key)
             {
-                case "ArrowLeft":
+                case Key.Left:
                     CurrentSide = Side.Left;
                     break;
-                case "ArrowRight":
+                case Key.Right:
                     CurrentSide = Side.Right;
                     break;
                 default: return;
@@ -77,20 +77,20 @@ namespace AncientRush.Scenes
                         arrow.Rotation = 0;
                         break;
                 }
-                progressBar.Progress += 0.1f;
+                progressBar.Progress += 0.025f;
             }
         }
 
         public override void Update(double delta)
         {
-            progressBar.Progress += (float)delta/k;
+            progressBar.Progress += (float)delta/ProgressBarReductionSpeed;
             progressBar.Update();
         }
+    }
 
-        private enum Side
-        {
-            Left,
-            Right
-        }
+    public enum Side
+    {
+        Left,
+        Right
     }
 }
