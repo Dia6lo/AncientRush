@@ -5,15 +5,14 @@ using Bridge.Pixi;
 
 namespace AncientRush.Scenes
 {
-    public class FirestarterScene : Scene
+    public class FirestarterScene : GameScene
     {
         private readonly Texture leftTexture = App.Textures.Firestarter1;
         private readonly Texture rightTexture = App.Textures.Firestarter2;
         private readonly Sprite hand;
-        private readonly Sprite arrow;
         private readonly ProgressBar progressBar;
         private const float ProgressBarReductionSpeed = -6000;
-        private Side currentSide;
+        private Direction currentDirection;
 
         public FirestarterScene()
         {
@@ -29,20 +28,15 @@ namespace AncientRush.Scenes
                 }
             };
             Container.AddChild(progressBar.Sprite);
-            arrow = new Sprite(App.Textures.Arrow)
-            {
-                Anchor = new Point(1, 0.5f),
-                Position = new Point(200, 150)
-            };
-            Container.AddChild(arrow);
             hand = new Sprite(rightTexture)
             {
                 Anchor = new Point(0.5f, 0.5f),
                 Position = new Point(500, 360)
             };
-            currentSide = Side.Right;
+            CurrentDirection = Direction.Right;
             Container.AddChild(hand);
             Document.AddEventListener(EventType.KeyDown, KeyPressed);
+            AddOverlay();
         }
 
         private void KeyPressed(Event e)
@@ -51,30 +45,32 @@ namespace AncientRush.Scenes
             switch (key)
             {
                 case Key.Left:
-                    CurrentSide = Side.Left;
+                    CurrentDirection = Direction.Left;
                     break;
                 case Key.Right:
-                    CurrentSide = Side.Right;
+                    CurrentDirection = Direction.Right;
                     break;
                 default: return;
             }
         }
 
-        private Side CurrentSide
+        private Direction CurrentDirection
         {
             set
             {
-                if (currentSide == value) return;
-                currentSide = value;
+                if (currentDirection == value) return;
+                currentDirection = value;
                 switch (value)
                 {
-                    case Side.Left:
+                    case Direction.Left:
                         hand.Texture = leftTexture;
-                        arrow.Rotation = Pixi.DegToRad * 180;
+                        ArrowBoard.Disable(Direction.Left);
+                        ArrowBoard.Enable(Direction.Right);
                         break;
-                    case Side.Right:
+                    case Direction.Right:
                         hand.Texture = rightTexture;
-                        arrow.Rotation = 0;
+                        ArrowBoard.Disable(Direction.Right);
+                        ArrowBoard.Enable(Direction.Left);
                         break;
                 }
                 progressBar.Progress += 0.025f;
@@ -88,9 +84,11 @@ namespace AncientRush.Scenes
         }
     }
 
-    public enum Side
+    public enum Direction
     {
         Left,
-        Right
+        Right,
+        Up,
+        Down
     }
 }

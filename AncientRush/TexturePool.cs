@@ -21,5 +21,10 @@ namespace AncientRush
         public Texture CaveMan1 = Get("CaveMan1");
         public Texture CaveMan2 = Get("CaveMan2");
         public Texture CaveMan3 = Get("CaveMan3");
+        public Texture ArrowBoard = Get("ArrowBoard");
+        public Texture ArrowLeft = Get("ArrowLeft");
+        public Texture ArrowRight = Get("ArrowRight");
+        public Texture ArrowUp = Get("ArrowUp");
+        public Texture ArrowDown = Get("ArrowDown");
     }
 }

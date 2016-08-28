@@ -6,13 +6,13 @@ using Bridge.Pixi.Extras;
 
 namespace AncientRush.Scenes
 {
-    public class MaterialCollectionScene : Scene
+    public class MaterialCollectionScene : GameScene
     {
         private float headingAngle;
         private const float Speed = 5;
         private bool isMoving;
         private bool isRotating;
-        private Side rotation;
+        private Direction rotation;
         private bool isHoldingMaterial;
         private Material material;
         private List<Sprite> sticks = new List<Sprite>();
@@ -45,6 +45,8 @@ namespace AncientRush.Scenes
             Container.AddChild(caveMan);
             Document.AddEventListener(EventType.KeyDown, OnKeyDown);
             Document.AddEventListener(EventType.KeyUp, OnKeyUp);
+            SetupControls(Direction.Up, Direction.Left, Direction.Right);
+            AddOverlay();
         }
 
         private void GenerateMaterials(List<Sprite> sprites, Texture texture, int count)
@@ -103,14 +105,14 @@ namespace AncientRush.Scenes
                     if (!isRotating)
                     {
                         isRotating = true;
-                        rotation = Side.Left;
+                        rotation = Direction.Left;
                     }
                     break;
                 case Key.Right:
                     if (!isRotating)
                     {
                         isRotating = true;
-                        rotation = Side.Right;
+                        rotation = Direction.Right;
                     }
                     break;
                 default: return;
@@ -127,11 +129,11 @@ namespace AncientRush.Scenes
                     caveMan.GotoAndStop(0);
                     break;
                 case Key.Left:
-                    if (isRotating && rotation == Side.Left)
+                    if (isRotating && rotation == Direction.Left)
                         isRotating = false;
                     break;
                 case Key.Right:
-                    if (isRotating && rotation == Side.Right)
+                    if (isRotating && rotation == Direction.Right)
                         isRotating = false;
                     break;
                 default: return;
@@ -142,7 +144,7 @@ namespace AncientRush.Scenes
         {
             if (isRotating)
             {
-                var angleOffset = 5 * (rotation == Side.Right ? 1 : -1);
+                var angleOffset = 5 * (rotation == Direction.Right ? 1 : -1);
                 headingAngle += angleOffset;
             }
             caveMan.Rotation = HeadingRadians;
