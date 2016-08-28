@@ -41,5 +41,6 @@ namespace AncientRush
         public Texture ArrowDown = Get("ArrowDown");
         public Texture CaveClose = Get("CaveClose");
         public Texture Title = Get("Title");
+        public Texture PressSpace = Get("PressSpace");
     }
 }

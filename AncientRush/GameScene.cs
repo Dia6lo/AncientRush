@@ -58,6 +58,7 @@ namespace AncientRush
 
         public override void Update(double delta)
         {
+            base.Update(delta);
             if (goalState == GoalState.DroppedOut) return;
             timer += (float) delta;
             switch (goalState)

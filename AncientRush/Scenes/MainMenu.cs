@@ -1,5 +1,6 @@
-﻿using Bridge.Pixi;
-using Bridge.Pixi.Interaction;
+﻿using System;
+using Bridge.Html5;
+using Bridge.Pixi;
 
 namespace AncientRush.Scenes
 {
@@ -9,10 +10,11 @@ namespace AncientRush.Scenes
         private readonly CaveMan caveMan;
         private readonly Campfire campfire;
         private float timer;
-        private bool startPressed;
-        private Clouds clouds;
-        private Sprite sprite;
-        private Sprite title;
+        private bool spacePressed;
+        private readonly Clouds clouds;
+        private readonly Sprite title;
+        private readonly Sprite subTitle;
+        private readonly Action<Event> onKeyDown;
 
         public MainMenu()
         {
@@ -31,29 +33,36 @@ namespace AncientRush.Scenes
             };
             firstTime = false;
             Container.AddChild(title);
-            sprite = Sprite.FromImage("assets/Start.png");
-            sprite.Position.Set(400, 300);
-            sprite.Anchor.Set(0.5f, 0.5f);
-            sprite.Interactive = true;
-            sprite.OnceMouseDown(OnOnceMouseDown);
-            sprite.OnceTouchStart(OnOnceMouseDown);
-            Container.AddChild(sprite);
+            subTitle = new Sprite(App.Textures.PressSpace)
+            {
+                Anchor = new Point(0.5f, 0.5f),
+                Position = new Point(400, 200)
+            };
+            Container.AddChild(subTitle);
+            onKeyDown = OnKeyDown;
+            Document.AddEventListener(EventType.KeyDown, onKeyDown);
+            FadeIn(firstTime ? 2500 : 500);
         }
 
-        private void OnOnceMouseDown(InteractionEvent arg)
+        private void OnKeyDown(Event @event)
         {
-            startPressed = true;
-            sprite.Visible = false;
+            if (Appearing) return;
+            if (!@event.As<KeyboardEvent>().Key.Equals(" ")) return;
+            Document.RemoveEventListener(EventType.KeyDown, onKeyDown);
+            spacePressed = true;
         }
 
         public override void Update(double delta)
         {
+            base.Update(delta);
             clouds.Update();
-            if (!startPressed) return;
+            if (Appearing || !spacePressed) return;
             timer += (float)delta;
             if (timer < 1000)
             {
-                title.Alpha = Lerp(timer / 1000, 1, 0);
+                var alpha = Lerp(timer / 1000, 1, 0);
+                title.Alpha = alpha;
+                subTitle.Alpha = alpha;
                 return;
             }
             if (timer < 2000)
