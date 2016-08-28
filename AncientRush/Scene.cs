@@ -36,7 +36,7 @@ namespace AncientRush
             return Lerp(v, from, to);
         }
 
-        private static float Lerp(float amount, float value1, float value2)
+        protected static float Lerp(float amount, float value1, float value2)
         {
             return value1 + (value2 - value1) * amount;
         }

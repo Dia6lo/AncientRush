@@ -10,30 +10,25 @@ namespace AncientRush.Scenes
         private readonly Texture leftTexture = App.Textures.Firestarter1;
         private readonly Texture rightTexture = App.Textures.Firestarter2;
         private readonly Sprite hand;
-        private readonly ProgressBar progressBar;
         private const float ProgressBarReductionSpeed = -6000;
         private Direction currentDirection;
+        private float timer;
+        private Sprite smoke;
+        private float progress;
+        private Action<Event> keyPressed;
 
         public FirestarterScene(): base("Start fire!", 200, 100)
         {
-            progressBar = new ProgressBar
+            var bg = new Sprite(App.Textures.CaveClose);
+            Container.AddChild(bg);
+            smoke = new Sprite(App.Textures.Smoke0)
             {
-                Width = 780,
-                Height = 50,
-                Color = 0x00FF00,
-                DarkColor = 0x00AA00,
-                Sprite =
-                {
-                    Position = new Point(10, 10)
-                }
+                Alpha = 0.75f,
+                Anchor = new Point(0.5f, 0.5f),
+                Position = new Point(400, 475),
+                Visible = false
             };
-            Action<Event> keyPressed = KeyPressed;
-            progressBar.MaxReached += () =>
-            {
-                Document.RemoveEventListener(EventType.KeyDown, keyPressed);
-                Open<MainMenu>();
-            };
-            Container.AddChild(progressBar.Sprite);
+            keyPressed = KeyPressed;
             hand = new Sprite(rightTexture)
             {
                 Anchor = new Point(0.5f, 0.5f),
@@ -41,6 +36,7 @@ namespace AncientRush.Scenes
             };
             CurrentDirection = Direction.Right;
             Container.AddChild(hand);
+            Container.AddChild(smoke);
             Document.AddEventListener(EventType.KeyDown, keyPressed);
             AddOverlay();
         }
@@ -80,16 +76,43 @@ namespace AncientRush.Scenes
                         ArrowBoard.Enable(Direction.Left);
                         break;
                 }
-                progressBar.Progress += 0.025f;
+                SetProgress(progress + 0.025f);
             }
         }
 
         public override void Update(double delta)
         {
             base.Update(delta);
-            if (IsGoalOnScreen) return;
-            progressBar.Progress += (float)delta/ProgressBarReductionSpeed;
-            progressBar.Update();
+            SetProgress(progress + (float)delta / ProgressBarReductionSpeed);
+            Console.WriteLine(progress);
+        }
+
+        private void SetProgress(float value)
+        {
+            if (progress == value) return;
+            if (value <= 0)
+            {
+                progress = 0;
+                smoke.Visible = false;
+                return;
+            }
+            if (value > 0.1f)
+                smoke.Visible = true;
+            if (value >= 1)
+            {
+                smoke.Texture = App.Textures.Smoke2;
+                progress = 1;
+                Document.RemoveEventListener(EventType.KeyDown, keyPressed);
+                Open<MainMenu>();
+                return;
+            }
+            progress = value;
+            if (value <= 0.33f)
+                smoke.Texture = App.Textures.Smoke0;
+            else if (value <= 0.66f)
+                smoke.Texture = App.Textures.Smoke1;
+            else
+                smoke.Texture = App.Textures.Smoke2;
         }
     }
 

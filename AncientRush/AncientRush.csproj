@@ -43,6 +43,7 @@
     <Compile Include="Scenes\ArrowBoard.cs" />
     <Compile Include="Scenes\Campfire.cs" />
     <Compile Include="Scenes\CaveMan.cs" />
+    <Compile Include="Scenes\Clouds.cs" />
     <Compile Include="Scenes\FirestarterScene.cs" />
     <Compile Include="Scenes\MainMenu.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

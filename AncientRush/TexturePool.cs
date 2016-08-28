@@ -20,6 +20,9 @@ namespace AncientRush
         public Texture Campfire1 = Get("Campfire1");
         public Texture Campfire2 = Get("Campfire2");
         public Texture Campfire3 = Get("Campfire3");
+        public Texture Smoke0 = Get("Smoke0");
+        public Texture Smoke1 = Get("Smoke1");
+        public Texture Smoke2 = Get("Smoke2");
         public Texture Cloud = Get("Cloud");
         public Texture Firestarter1 = Get("Firestarter_1");
         public Texture Firestarter2 = Get("Firestarter_2");
@@ -36,5 +39,7 @@ namespace AncientRush
         public Texture ArrowRight = Get("ArrowRight");
         public Texture ArrowUp = Get("ArrowUp");
         public Texture ArrowDown = Get("ArrowDown");
+        public Texture CaveClose = Get("CaveClose");
+        public Texture Title = Get("Title");
     }
 }
