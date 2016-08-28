@@ -7,7 +7,8 @@ namespace AncientRush.Scenes
     public class MainMenu : Scene
     {
         private Container cloudContainer = new Container();
-        private CaveMan caveMan;
+        private readonly CaveMan caveMan;
+        private readonly Campfire campfire;
         private float timer;
         private bool startPressed;
 
@@ -18,6 +19,8 @@ namespace AncientRush.Scenes
             Container.AddChild(bg);
             caveMan = new CaveMan {Container = {Position = new Point(25, 250)}};
             Container.AddChild(caveMan.Container);
+            campfire = new Campfire { Container = { Position = new Point(250, 350) } };
+            Container.AddChild(campfire.Container);
             var sprite = Sprite.FromImage("assets/Start.png");
             sprite.Position.Set(400, 300);
             sprite.Anchor.Set(0.5f, 0.5f);
@@ -30,6 +33,7 @@ namespace AncientRush.Scenes
         private void OnOnceMouseDown(InteractionEvent arg)
         {
             startPressed = true;
+            campfire.BeginExtinguish();
             caveMan.NoticeChanges();
         }
 
@@ -39,7 +43,10 @@ namespace AncientRush.Scenes
             timer += (float)delta;
             if (timer < 1000) return;
             if (timer < 2000)
+            {
+                campfire.FinishExtinguish();
                 caveMan.BecomeSad();
+            }
             else
                 Open<MaterialCollectionScene>();
         }
@@ -79,6 +86,43 @@ namespace AncientRush.Scenes
         public void BecomeSad()
         {
             emotions.Texture = App.Textures.CaveManMenu3;
+        }
+    }
+
+    public class Campfire
+    {
+        private MovieClip idle;
+        private Sprite extinguish;
+
+        public Campfire()
+        {
+            Container = new Container();
+            idle = new MovieClip(new[] { App.Textures.Campfire0, App.Textures.Campfire1 })
+            {
+                Loop = true,
+                AnimationSpeed = 0.1f
+            };
+            Container.AddChild(idle);
+            extinguish = new Sprite(App.Textures.Campfire2)
+            {
+                Visible = false
+            };
+            Container.AddChild(extinguish);
+            idle.Play();
+        }
+
+        public Container Container { get; private set; }
+
+        public void BeginExtinguish()
+        {
+            idle.Stop();
+            idle.Visible = false;
+            extinguish.Visible = true;
+        }
+
+        public void FinishExtinguish()
+        {
+            extinguish.Texture = App.Textures.Campfire3;
         }
     }
 }

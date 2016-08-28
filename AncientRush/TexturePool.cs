@@ -16,6 +16,10 @@ namespace AncientRush
         public Texture CaveManMenu1 = Get("CaveManMenu1");
         public Texture CaveManMenu2 = Get("CaveManMenu2");
         public Texture CaveManMenu3 = Get("CaveManMenu3");
+        public Texture Campfire0 = Get("Campfire0");
+        public Texture Campfire1 = Get("Campfire1");
+        public Texture Campfire2 = Get("Campfire2");
+        public Texture Campfire3 = Get("Campfire3");
         public Texture Cloud = Get("Cloud");
         public Texture Firestarter1 = Get("Firestarter_1");
         public Texture Firestarter2 = Get("Firestarter_2");

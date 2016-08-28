@@ -89,7 +89,7 @@ namespace AncientRush
 
         private void HandleGoalStay()
         {
-            if (timer <= 500) return;
+            if (timer <= 750) return;
             goalState = GoalState.DropOut;
             timer = 0;
         }
