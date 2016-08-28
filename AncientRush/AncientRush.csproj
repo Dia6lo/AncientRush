@@ -40,18 +40,23 @@
     <Compile Include="Key.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="SceneManager.cs" />
-    <Compile Include="Scenes\ArrowBoard.cs" />
-    <Compile Include="Scenes\Campfire.cs" />
-    <Compile Include="Scenes\CaveMan.cs" />
-    <Compile Include="Scenes\Clouds.cs" />
+    <Compile Include="Scenes\Controls\ArrowBoard.cs" />
+    <Compile Include="Scenes\Controls\Campfire.cs" />
+    <Compile Include="Scenes\Controls\CaveMan.cs" />
+    <Compile Include="Scenes\Controls\Clouds.cs" />
+    <Compile Include="Scenes\Direction.cs" />
     <Compile Include="Scenes\FirestarterScene.cs" />
     <Compile Include="Scenes\MainMenu.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Scenes\Controls\ProgressBar.cs" />
     <Compile Include="Scene.cs" />
+    <Compile Include="Scenes\Material.cs" />
     <Compile Include="Scenes\MaterialCollectionScene.cs" />
     <Compile Include="Scenes\TestScene.cs" />
+    <Compile Include="Scenes\Controls\SlidingMessage.cs" />
+    <Compile Include="Scenes\Timer.cs" />
     <Compile Include="TexturePool.cs" />
+    <Compile Include="Utility.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Bridge, Version=1.14.0.0, Culture=neutral, processorArchitecture=MSIL">

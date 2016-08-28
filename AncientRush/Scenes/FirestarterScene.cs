@@ -10,14 +10,14 @@ namespace AncientRush.Scenes
         private readonly Texture leftTexture = App.Textures.Firestarter1;
         private readonly Texture rightTexture = App.Textures.Firestarter2;
         private readonly Sprite hand;
-        private const float ProgressBarReductionSpeed = -6000;
+        private const float ProgressBarReductionSpeed = -10000;
         private Direction currentDirection;
         private float timer;
         private Sprite smoke;
         private float progress;
         private Action<Event> keyPressed;
 
-        public FirestarterScene(): base("Start fire!", 200, 100)
+        public FirestarterScene(): base("Mine rubs sticks!", 300, 100)
         {
             var bg = new Sprite(App.Textures.CaveClose);
             Container.AddChild(bg);
@@ -84,7 +84,6 @@ namespace AncientRush.Scenes
         {
             base.Update(delta);
             SetProgress(progress + (float)delta / ProgressBarReductionSpeed);
-            Console.WriteLine(progress);
         }
 
         private void SetProgress(float value)
@@ -114,13 +113,5 @@ namespace AncientRush.Scenes
             else
                 smoke.Texture = App.Textures.Smoke2;
         }
-    }
-
-    public enum Direction
-    {
-        Left,
-        Right,
-        Up,
-        Down
     }
 }

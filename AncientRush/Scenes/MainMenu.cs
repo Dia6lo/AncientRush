@@ -1,4 +1,5 @@
 ﻿using System;
+using AncientRush.Scenes.Controls;
 using Bridge.Html5;
 using Bridge.Pixi;
 
@@ -9,12 +10,13 @@ namespace AncientRush.Scenes
         private static bool firstTime = true;
         private readonly CaveMan caveMan;
         private readonly Campfire campfire;
-        private float timer;
+        private Timer timer;
         private bool spacePressed;
         private readonly Clouds clouds;
         private readonly Sprite title;
         private readonly Sprite subTitle;
         private readonly Action<Event> onKeyDown;
+        private SlidingMessage message;
 
         public MainMenu()
         {
@@ -31,17 +33,58 @@ namespace AncientRush.Scenes
                 Position = new Point(50, 50),
                 Visible = firstTime
             };
-            firstTime = false;
             Container.AddChild(title);
             subTitle = new Sprite(App.Textures.PressSpace)
             {
                 Anchor = new Point(0.5f, 0.5f),
-                Position = new Point(400, 200)
+                Position = new Point(400, 200),
+                Visible = firstTime
             };
             Container.AddChild(subTitle);
             onKeyDown = OnKeyDown;
-            Document.AddEventListener(EventType.KeyDown, onKeyDown);
+            if (firstTime)
+                Document.AddEventListener(EventType.KeyDown, onKeyDown);
+            else
+                TriggerIntro();
             FadeIn(firstTime ? 2500 : 500);
+        }
+
+        private void TriggerIntro()
+        {
+            spacePressed = true;
+            timer = new Timer();
+            timer.Subscribe(1000, () =>
+            {
+                message = new SlidingMessage(firstTime ? "Mine happy!" : "Mine happy again!", 300, 100);
+                Container.AddChild(message.Container);
+            });
+            timer.Subscribe(3000, () =>
+            {
+                campfire.BeginExtinguish();
+                caveMan.NoticeChanges();
+            });
+            timer.Subscribe(4000, () =>
+            {
+                Container.RemoveChild(message.Container);
+                message = new SlidingMessage("Uh-oh", 100, 100);
+                Container.AddChild(message.Container);
+            });
+            timer.Subscribe(6000, () =>
+            {
+                campfire.FinishExtinguish();
+                caveMan.BecomeSad();
+            });
+            timer.Subscribe(7000, () =>
+            {
+                Container.RemoveChild(message.Container);
+                message = new SlidingMessage("Mine sad", 150, 100);
+                Container.AddChild(message.Container);
+            });
+            timer.Subscribe(9000, () =>
+            {
+                firstTime = false;
+                Open<MaterialCollectionScene>();
+            });
         }
 
         private void OnKeyDown(Event @event)
@@ -49,7 +92,7 @@ namespace AncientRush.Scenes
             if (Appearing) return;
             if (!@event.As<KeyboardEvent>().Key.Equals(" ")) return;
             Document.RemoveEventListener(EventType.KeyDown, onKeyDown);
-            spacePressed = true;
+            TriggerIntro();
         }
 
         public override void Update(double delta)
@@ -57,27 +100,13 @@ namespace AncientRush.Scenes
             base.Update(delta);
             clouds.Update();
             if (Appearing || !spacePressed) return;
-            timer += (float)delta;
-            if (timer < 1000)
-            {
-                var alpha = Lerp(timer / 1000, 1, 0);
-                title.Alpha = alpha;
-                subTitle.Alpha = alpha;
-                return;
-            }
-            if (timer < 2000)
-            {
-                campfire.BeginExtinguish();
-                caveMan.NoticeChanges();
-                return;
-            }
-            if (timer < 3000)
-            {
-                campfire.FinishExtinguish();
-                caveMan.BecomeSad();
-            }
-            else
-                Open<MaterialCollectionScene>();
+            timer.Update(delta);
+            if (message != null)
+                message.Update(delta);
+            if (timer.Time > 1000) return;
+            var alpha = Utility.Lerp(timer.Time / 1000, 1, 0);
+            title.Alpha = alpha;
+            subTitle.Alpha = alpha;
         }
     }
 }

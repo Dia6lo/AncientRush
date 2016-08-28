@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Bridge.Pixi;
 
-namespace AncientRush.Scenes
+namespace AncientRush.Scenes.Controls
 {
     public class Clouds
     {

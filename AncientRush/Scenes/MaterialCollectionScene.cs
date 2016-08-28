@@ -27,7 +27,7 @@ namespace AncientRush.Scenes
         private int collectedSticks;
         private int collectedTinders;
 
-        public MaterialCollectionScene() : base("Collect tinder and sticks!", 400, 100)
+        public MaterialCollectionScene() : base("Mine collects tinder and sticks!", 450, 100)
         {
             var map = new Sprite(App.Textures.Map);
             Container.AddChild(map);
@@ -230,11 +230,5 @@ namespace AncientRush.Scenes
                 currentMaterial = material;
             }
         }
-    }
-
-    public enum Material
-    {
-        Stick,
-        Tinder
     }
 }

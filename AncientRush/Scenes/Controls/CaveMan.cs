@@ -1,7 +1,7 @@
 ﻿using Bridge.Pixi;
 using Bridge.Pixi.Extras;
 
-namespace AncientRush.Scenes
+namespace AncientRush.Scenes.Controls
 {
     public class CaveMan
     {

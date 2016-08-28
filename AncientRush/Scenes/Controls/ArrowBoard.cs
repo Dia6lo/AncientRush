@@ -1,7 +1,7 @@
 using System;
 using Bridge.Pixi;
 
-namespace AncientRush.Scenes
+namespace AncientRush.Scenes.Controls
 {
     public class ArrowBoard
     {
