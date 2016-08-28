@@ -18,7 +18,7 @@ namespace AncientRush.Scenes
 
         private void OnDown(InteractionEvent arg)
         {
-           Open<FirestarterScene>();
+           Open<MaterialCollectionScene>();
         }
     }
 }

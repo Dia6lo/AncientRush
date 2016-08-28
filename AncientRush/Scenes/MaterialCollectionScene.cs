@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Bridge.Html5;
 using Bridge.Pixi;
 using Bridge.Pixi.Extras;
+using Text = Bridge.Pixi.Text;
 
 namespace AncientRush.Scenes
 {
@@ -14,15 +15,19 @@ namespace AncientRush.Scenes
         private bool isRotating;
         private Direction rotation;
         private bool isHoldingMaterial;
-        private Material material;
-        private List<Sprite> sticks = new List<Sprite>();
-        private List<Sprite> tinders = new List<Sprite>();
-        private Random random = new Random();
+        private Material currentMaterial;
+        private readonly List<Sprite> sticks = new List<Sprite>();
+        private readonly List<Sprite> tinders = new List<Sprite>();
+        private readonly Random random = new Random();
         private const int StickCount = 2;
         private const int TinderCount = 3;
-        private MovieClip caveMan;
+        private readonly MovieClip caveMan;
+        private readonly Sprite tipArrow;
+        private float tipArrowDirection = 1;
+        private int collectedSticks;
+        private int collectedTinders;
 
-        public MaterialCollectionScene()
+        public MaterialCollectionScene() : base("Collect tinders and sticks!", 400, 100)
         {
             var map = new Sprite(App.Textures.Map);
             Container.AddChild(map);
@@ -35,6 +40,12 @@ namespace AncientRush.Scenes
                 App.Textures.CaveMan2,
                 App.Textures.CaveMan3
             };
+            tipArrow = new Sprite(App.Textures.Arrow)
+            {
+                Position = new Point(100, 100),
+                Visible = false,
+            };
+            Container.AddChild(tipArrow);
             caveMan = new MovieClip(caveManTextures)
             {
                 Anchor = new Point(0.5f, 0.5f),
@@ -94,6 +105,7 @@ namespace AncientRush.Scenes
 
         private void OnKeyDown(Event e)
         {
+            if (IsGoalOnScreen) return;
             var key = e.As<KeyboardEvent>().GetKey();
             switch (key)
             {
@@ -121,6 +133,7 @@ namespace AncientRush.Scenes
 
         private void OnKeyUp(Event e)
         {
+            if (IsGoalOnScreen) return;
             var key = e.As<KeyboardEvent>().GetKey();
             switch (key)
             {
@@ -142,6 +155,8 @@ namespace AncientRush.Scenes
 
         public override void Update(double delta)
         {
+            base.Update(delta);
+            if (IsGoalOnScreen) return;
             if (isRotating)
             {
                 var angleOffset = 5 * (rotation == Direction.Right ? 1 : -1);
@@ -153,6 +168,59 @@ namespace AncientRush.Scenes
                 caveMan.Position = caveMan.Position.Add(HeadingVector.Multiply(Speed));
                 caveMan.Position.X = caveMan.Position.X.Clamp(100, 700);
                 caveMan.Position.Y = caveMan.Position.Y.Clamp(100, 500);
+            }
+            CheckCaveCollision();
+            CheckGoals();
+            CheckCollisions(sticks, Material.Stick);
+            CheckCollisions(tinders, Material.Tinder);
+            UpdateTipArrow();
+        }
+
+        private void CheckGoals()
+        {
+            if (collectedTinders != TinderCount || collectedSticks != StickCount)
+                return;
+            Open<FirestarterScene>();
+        }
+
+        private void UpdateTipArrow()
+        {
+            tipArrow.Position.Y += tipArrowDirection;
+            if (tipArrow.Position.Y >= 110 || tipArrow.Position.Y <= 100)
+                tipArrowDirection *= -1;
+        }
+
+        private void CheckCaveCollision()
+        {
+            if (!isHoldingMaterial) return;
+            var cavePosition = new Point(125, 110);
+            var range = caveMan.Position.Subtract(cavePosition).Length();
+            if (range > 20) return;
+            switch (currentMaterial)
+            {
+                case Material.Stick:
+                    collectedSticks++;
+                    break;
+                case Material.Tinder:
+                    collectedTinders++;
+                    break;
+            }
+            isHoldingMaterial = false;
+            tipArrow.Visible = false;
+        }
+
+        private void CheckCollisions(List<Sprite> sprites, Material material)
+        {
+            if (isHoldingMaterial) return;
+            foreach (var sprite in sprites)
+            {
+                if (!sprite.Visible) continue;
+                var range = caveMan.Position.Subtract(sprite.Position).Length();
+                if (range > 20) continue;
+                sprite.Visible = false;
+                isHoldingMaterial = true;
+                tipArrow.Visible = true;
+                currentMaterial = material;
             }
         }
     }

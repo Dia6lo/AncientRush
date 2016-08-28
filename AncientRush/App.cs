@@ -13,6 +13,9 @@ namespace AncientRush
         public static SceneManager SceneManager { get; private set; }
         public static TexturePool Textures { get; private set; }
 
+        public const float Width = 800;
+        public const float Height = 600;
+
         private static Scene CurrentScene
         {
             get { return SceneManager.CurrentScene; }
@@ -21,11 +24,11 @@ namespace AncientRush
         [Ready]
         public static void Main()
         {
-            renderer = Pixi.AutoDetectRenderer(800, 600, new RendererOptions {BackgroundColor = 0x1099bb});
+            renderer = Pixi.AutoDetectRenderer(Width, Height, new RendererOptions {BackgroundColor = 0x1099bb});
             Document.Body.AppendChild(renderer["view"].As<HTMLCanvasElement>());
             Textures = new TexturePool();
             SceneManager = new SceneManager();
-            SceneManager.Open<MaterialCollectionScene>();
+            SceneManager.Open<MainMenu>();
             Window.RequestAnimationFrame(Animate);
         }
 

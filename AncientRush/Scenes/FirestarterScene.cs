@@ -14,7 +14,7 @@ namespace AncientRush.Scenes
         private const float ProgressBarReductionSpeed = -6000;
         private Direction currentDirection;
 
-        public FirestarterScene()
+        public FirestarterScene(): base("Start fire!", 200, 100)
         {
             progressBar = new ProgressBar
             {
@@ -41,6 +41,7 @@ namespace AncientRush.Scenes
 
         private void KeyPressed(Event e)
         {
+            if (IsGoalOnScreen) return;
             var key = e.As<KeyboardEvent>().GetKey();
             switch (key)
             {
@@ -79,6 +80,8 @@ namespace AncientRush.Scenes
 
         public override void Update(double delta)
         {
+            base.Update(delta);
+            if (IsGoalOnScreen) return;
             progressBar.Progress += (float)delta/ProgressBarReductionSpeed;
             progressBar.Update();
         }
