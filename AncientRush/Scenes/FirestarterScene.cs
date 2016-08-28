@@ -27,6 +27,12 @@ namespace AncientRush.Scenes
                     Position = new Point(10, 10)
                 }
             };
+            Action<Event> keyPressed = KeyPressed;
+            progressBar.MaxReached += () =>
+            {
+                Document.RemoveEventListener(EventType.KeyDown, keyPressed);
+                Open<MainMenu>();
+            };
             Container.AddChild(progressBar.Sprite);
             hand = new Sprite(rightTexture)
             {
@@ -35,7 +41,7 @@ namespace AncientRush.Scenes
             };
             CurrentDirection = Direction.Right;
             Container.AddChild(hand);
-            Document.AddEventListener(EventType.KeyDown, KeyPressed);
+            Document.AddEventListener(EventType.KeyDown, keyPressed);
             AddOverlay();
         }
 

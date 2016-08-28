@@ -27,7 +27,7 @@ namespace AncientRush.Scenes
         private int collectedSticks;
         private int collectedTinders;
 
-        public MaterialCollectionScene() : base("Collect tinders and sticks!", 400, 100)
+        public MaterialCollectionScene() : base("Collect tinder and sticks!", 400, 100)
         {
             var map = new Sprite(App.Textures.Map);
             Container.AddChild(map);
@@ -54,8 +54,15 @@ namespace AncientRush.Scenes
                 AnimationSpeed = 0.1f
             };
             Container.AddChild(caveMan);
-            Document.AddEventListener(EventType.KeyDown, OnKeyDown);
-            Document.AddEventListener(EventType.KeyUp, OnKeyUp);
+            Action<Event> onKeyDown = OnKeyDown;
+            Action<Event> onKeyUp = OnKeyUp;
+            Document.AddEventListener(EventType.KeyDown, onKeyDown);
+            Document.AddEventListener(EventType.KeyUp, onKeyUp);
+            Closing += () =>
+            {
+                Document.RemoveEventListener(EventType.KeyDown, onKeyDown);
+                Document.RemoveEventListener(EventType.KeyUp, onKeyUp);
+            };
             SetupControls(Direction.Up, Direction.Left, Direction.Right);
             AddOverlay();
         }

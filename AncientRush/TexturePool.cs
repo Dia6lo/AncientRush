@@ -11,6 +11,12 @@ namespace AncientRush
             return Texture.FromImage(Folder + "/" + name + ".png");
         }
 
+        public Texture MainMenuBG = Get("MainMenu");
+        public Texture CaveManMenu0 = Get("CaveManMenu0");
+        public Texture CaveManMenu1 = Get("CaveManMenu1");
+        public Texture CaveManMenu2 = Get("CaveManMenu2");
+        public Texture CaveManMenu3 = Get("CaveManMenu3");
+        public Texture Cloud = Get("Cloud");
         public Texture Firestarter1 = Get("Firestarter_1");
         public Texture Firestarter2 = Get("Firestarter_2");
         public Texture Arrow = Get("Arrow");

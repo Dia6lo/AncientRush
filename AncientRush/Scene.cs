@@ -1,4 +1,5 @@
-﻿using Bridge.Pixi;
+﻿using System;
+using Bridge.Pixi;
 
 namespace AncientRush
 {
@@ -15,12 +16,18 @@ namespace AncientRush
 
         protected void Open(Scene scene)
         {
+            if (Closing != null)
+                Closing();
             App.SceneManager.Open(scene);
         }
 
         protected void Open<T>() where T: Scene, new()
         {
+            if (Closing != null)
+                Closing();
             App.SceneManager.Open<T>();
         }
+
+        protected event Action Closing;
     }
 }
