@@ -21,6 +21,8 @@ namespace AncientRush
             get { return SceneManager.CurrentScene; }
         }
 
+        public static HTMLAudioElement Audio;
+
         [Ready]
         public static void Main()
         {

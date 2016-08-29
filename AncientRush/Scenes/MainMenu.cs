@@ -20,6 +20,11 @@ namespace AncientRush.Scenes
 
         public MainMenu()
         {
+            if (App.Audio != null)
+                App.Audio.Remove();
+            App.Audio = new HTMLAudioElement("assets/GF.mp3");
+            Document.Body.AppendChild(App.Audio);
+            App.Audio.Play();
             clouds = new Clouds();
             Container.AddChild(clouds.Container);
             var bg = new Sprite(App.Textures.MainMenuBG);
